@@ -450,7 +450,7 @@ async function fetchFromAW(watcher, set, appTitle="None") {
 	// Get the ISO formatted string from period hrs ago
 	const periodISO = new Date(new Date().getTime() - gOptions[`awPeriod${set}`] * 60 * 60 * 1000).toISOString()
 	// Set URL variable
-	const url = "http://localhost:5600/api/0/buckets/aw-watcher-"+watcher+"_"+gOptions[`awHostname${set}`]+"/events?start="+periodISO
+	const url = "http://" + gOptions["awAddress"] + "/api/0/buckets/aw-watcher-"+watcher+"_"+gOptions[`awHostname${set}`]+"/events?start="+periodISO
 	// Fetch
 	const response = await fetch(url);
 
