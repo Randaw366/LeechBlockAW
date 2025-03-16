@@ -72,6 +72,11 @@ const PER_SET_OPTIONS = {
 	regexpBlock: { type: "string", def: "", id: "regexpBlock" },
 	regexpAllow: { type: "string", def: "", id: "regexpAllow" },
 	ignoreHash: { type: "boolean", def: true, id: "ignoreHash" },
+	awUse: { type: "boolean", def: false, id: "awUse" }, // default: disabled
+	awWatcher: { type: "string", def: "", id: "awWatcher" }, // default: blank
+	awApp: { type: "string", def: "", id: "awApp" }, // default: blank
+	awPeriod: { type: "string", def: "", id: "awPeriod" },
+	awMinTime: { type: "string", def: "", id: "awMinTime" },
 };
 
 const GENERAL_OPTIONS = {
@@ -119,6 +124,8 @@ const GENERAL_OPTIONS = {
 	autoExportSync: { type: "boolean", def: true, id: "autoExportSync" }, // default: enabled
 	lockdownHours: { type: "string", def: "", id: null }, // default: blank
 	lockdownMins: { type: "string", def: "", id: null }, // default: blank
+	awHostname: { type: "string", def: "", id: "awHostname" },
+	awAddress: { type: "string", def: "localhost:5600", id: "awAddress" },
 };
 
 function listObjectProperties(obj, name) {

@@ -31,6 +31,7 @@ var gTabIndex = 0;
 var gNewOpen = true;
 var gSimplified = false;
 var gClockTimeOpts;
+let initialized;
 
 // Initialize form (with specified number of block sets)
 //
@@ -70,6 +71,7 @@ function initForm(numSets) {
 		$("#tabGeneral").before(`<li id="tabBlockSet${set}">${nextTabHTML}</li>`);
 		$("#paneGeneral").before(`<div id="blockSet${set}">${nextSetHTML}</div>`);
 	}
+
 
 	// Set up JQuery UI widgets
 	$("#tabs").tabs({ activate: onActivate });
@@ -189,7 +191,7 @@ function showSimplifiedOptions(simplify) {
 	if (simplify) {
 		// Show simplified options
 		$(".simplifiable").css("display", "none");
-		$("fieldset[id^='advOpts'").css("display", "none");
+		$("fieldset[id^='advOpts']").css("display", "none");
 		$("button[id^='simpOpts']").hide();
 		$("button[id^='fullOpts']").show();
 	} else {
@@ -1225,7 +1227,7 @@ function initAccessControlPrompt(prompt) {
 	let dialogButtons = {
 		OK: function () {
 			let input = $(`#${prompt}Input`);
-			if (input.val() == gAccessRequiredInput) {
+			if (input.val() === gAccessRequiredInput) {
 				gAccessConfirmed = true;
 				$("#form").show({ effect: "fade" });
 				$(`#${prompt}`).dialog("close");
@@ -1252,7 +1254,7 @@ function initAccessControlPrompt(prompt) {
 	// Connect ENTER key to OK button
 	$(`#${prompt}Input`).keydown(
 		function (event) {
-			if (event.which == 13) {
+			if (event.which === 13) {
 				dialogButtons.OK();
 			}
 		}
@@ -1262,7 +1264,7 @@ function initAccessControlPrompt(prompt) {
 // Handle keydown event
 //
 function handleKeyDown(event) {
-	if (event.ctrlKey && event.which == 83) {
+	if (event.ctrlKey && event.which === 83) {
 		event.preventDefault();
 		if (!event.shiftKey) {
 			// Ctrl+S -> Save Options
@@ -1272,6 +1274,31 @@ function handleKeyDown(event) {
 			$("#saveOptionsClose").click();
 		}
 	}
+}
+
+// Handle initiation and deal with clicks, etc
+function handleAWInit() {
+
+	// God this is hacky, but it works? TODO: Actually use a proper listener so that I don't depend on this
+	setTimeout(function () {
+		for (let set = 1; set <= gNumSets; set++) {
+			if (document.getElementById(`awUse${set}`).checked) {
+				document.querySelectorAll(`.toggleElement${set}`).forEach(function (element) {
+					element.classList.remove('hidden');
+				});
+			}
+			document.getElementById(`awUse${set}`).addEventListener('change', function () {
+				let elements = document.querySelectorAll(`.toggleElement${set}`);
+				elements.forEach(function (element) {
+					if (this.checked) {
+						element.classList.remove('hidden')
+					} else {
+						element.classList.add('hidden');
+					}
+				}, this);
+			});
+		}
+	}, 2000)
 }
 
 /*** STARTUP CODE BEGINS HERE ***/
@@ -1298,5 +1325,6 @@ initAccessControlPrompt("promptPassword");
 initAccessControlPrompt("promptAccessCode");
 
 document.addEventListener("DOMContentLoaded", retrieveOptions);
+document.addEventListener("DOMContentLoaded", handleAWInit);
 
 window.addEventListener("keydown", handleKeyDown);

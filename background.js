@@ -445,6 +445,66 @@ function processTabs(active) {
 	}
 }
 
+// Function to fetch from AW
+async function fetchFromAW(watcher, set, appTitle="None") {
+	// Get the ISO formatted string from period hrs ago
+	const periodISO = new Date(new Date().getTime() - gOptions[`awPeriod${set}`] * 60 * 60 * 1000).toISOString()
+	// Set URL variable
+	const url = "http://localhost:5600/api/0/buckets/aw-watcher-"+watcher+"_"+gOptions[`awHostname${set}`]+"/events?start="+periodISO
+	// Fetch
+	const response = await fetch(url);
+
+	// Check if the response failed
+	if (!response.ok) {
+		warn("AW API fetch failed. URL: '" + url + "'")
+		return 0;
+	}
+	const json = await response.json();
+	let totalDuration = 0;
+
+	// Convert response to JSON and then iterate over it; check if it equals app or add it to totaltime. (Probably more efficient to check appTitle outside because then you don't check each time)
+	await json.forEach(event => {
+		if (appTitle === "None") {
+			totalDuration += event.duration;
+		} else {
+			if (event.data.app === appTitle) {
+				totalDuration += event.duration
+			}
+		}
+	});
+
+	// Return
+	return totalDuration;
+}
+
+function getOtherWatchers(set) {
+	const watchers = gOptions[`awWatcher${set}`].split(",");
+	let totalTime = 0;
+	watchers.forEach(watcher => {
+		fetchFromAW(watcher, set).then((time) => {totalTime += time});
+	});
+	return totalTime;
+}
+
+// A "block" check to see if AW has registered you working on ___ for long enough. Modify app
+function awBlock(set) {
+	// Minimum time spent working on all apps in minute
+	const minTime = gOptions[`awMinTime${set}`] = 90;
+
+	// Fetch apps to check from options page
+	const apps = gOptions[`awApp${set}`].split(",");
+	let totalTime = 0;
+
+	// Iterate over apps in the list of checks
+	apps.forEach(app => {
+		fetchFromAW("window", set, app).then((time) => {totalTime += time})
+	});
+	// Get time spent via special coding watchers
+	totalTime += getOtherWatchers(set);
+	return (totalTime >= minTime * 60);
+}
+
+
 // Check the URL of a tab and applies block if necessary (returns true if blocked)
 //
 function checkTab(id, isBeforeNav, isRepeat) {
@@ -645,8 +705,15 @@ function checkTab(id, isBeforeNav, isRepeat) {
 					|| (!conjMode && (withinTimePeriods || afterTimeLimit))
 					|| (conjMode && (withinTimePeriods && afterTimeLimit));
 
+			// Check if AW should be checked, and check it if needed.
+			let checkAW = (gOptions[`awUse${set}`])
+			let passAW = true
+			if (checkAW) {
+				passAW = awBlock(set);
+			}
+
 			// Apply block if all relevant block conditions are fulfilled
-			if (!override && doBlock && (!isRepeat || activeBlock)) {
+			if (!override && doBlock && (!isRepeat || activeBlock) && (!checkAW || passAW)) {
 
 				function applyBlock(keyword) {
 					if (gDiagMode) {
@@ -662,6 +729,9 @@ function checkTab(id, isBeforeNav, isRepeat) {
 						log(`withinTimePeriods: ${withinTimePeriods}`);
 						log(`afterTimeLimit: ${afterTimeLimit}`);
 						log(`blockURL: ${blockURL}`);
+						log('Tried AW: ${otherCheck}');
+						log('AW Block: ${passOther}');
+
 						if (blockRE) {
 							let res = blockRE.exec(pageURL);
 							if (res) {

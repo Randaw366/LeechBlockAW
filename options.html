@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 
+<!--suppress HtmlFormInputWithoutLabel -->
 <html lang="en">
 
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
 		<title>LeechBlock Options</title>
 		<link href="/jquery-ui/jquery-ui.min.css" rel="stylesheet">
 		<link href="/options.css" rel="stylesheet">
@@ -52,7 +54,7 @@
 								<textarea id="sites1" cols="60" rows="10" spellcheck="false" placeholder="somesite.com"></textarea>
 							</p>
 							<p>
-								<strong>Note:</strong> Do <u>not</u> include URL protocol prefixes such as <code>http://</code> or <code>file://</code>.
+								<strong>Note:</strong> Do <u>not</u> include URL protocol prefixes such as <code>https://</code> or <code>file://</code>.
 							</p>
 							<p>
 								<strong>Tip:</strong>
@@ -155,7 +157,7 @@
 								<label>Enter the fully specified URL of the page to show instead of these blocked sites:</label>
 							</p>
 							<p>
-								<input id="blockURL1" type="text" size="60" placeholder="http://somesite.com/somepage.html" title="Use $U to pass URL of blocked page">
+								<input id="blockURL1" type="text" size="60" placeholder="https://somesite.com/somepage.html" title="Use $U to pass URL of blocked page">
 							</p>
 							<p>
 								<label>Predefined URLs:</label>
@@ -177,6 +179,23 @@
 									<option value="1">only non-private tabs</option>
 									<option value="2">only private tabs</option>
 								</select>
+							</p>
+							<p class="simplifiable">
+								<input id="awUse1" type="checkbox">
+								<label for="awUse1">Use ActivityWatch block</label>
+							</p>
+							<p>
+								<textarea class="toggleElement1 hidden" id="awApp1" rows="2" cols="50" placeholder="Enter apps to track here, separated with a comma.
+DO NOT INCLUDE ANY THAT HAVE WATCHERS"></textarea>
+							</p>
+							<p>
+								<textarea class="toggleElement1 hidden" id="awWatcher1" rows="1" cols="60" placeholder="Enter watchers to track here, separated with a comma."></textarea>
+							</p>
+							<p>
+								<input class="toggleElement1 hidden" type="text" id="awPeriod1" style="width: 300px; height: 20px;" placeholder="Enter how long back, in hours, it should check.">
+							</p>
+							<p>
+								<input class="toggleElement1 hidden" type="text" id="awMinTime1" style="width: 300px; height: 20px;" placeholder="Enter the minimum time spent on requested apps and watchers">
 							</p>
 							<p class="simplifiable">
 								<input id="applyFilter1" type="checkbox">
@@ -489,6 +508,14 @@
 						</fieldset>
 						<fieldset>
 							<legend>Miscellaneous</legend>
+							<p>
+								<label for="awHostname">Enter the hostname of your device:</label>
+								<input type="text" id="awHostname" style="width: 300px; height: 20px;">
+							</p>
+							<p>
+								<label for="awAddress">Enter the address to your ActivityWatch server in IP:Port format:</label>
+								<input type="text" id="awAddress" style="width: 300px; height: 20px;">
+							</p>
 							<p class="simplifiable">
 								<input id="contextMenu" type="checkbox">
 								<label for="contextMenu">Show context menu</label>
@@ -594,10 +621,11 @@
 							<a href="https://www.proginosko.com/leechblock/" target="_blank">LeechBlock NG</a>
 							(Next Generation) is a simple productivity tool designed to<br>
 							block those time-wasting sites that can suck the life out of your working day.<br>
-							All you need to do is specify which sites to block and when to block them.
+							All you need to do is specify which sites to block and when to block them.<br>
+							LeechBlockAW is a modification of LeechBlock NG that allows you to use ActivityWatch tracking in LeechBlock
 						</p>
-						<p><strong>Version:</strong> <span id="version">?<span></p>
-						<p><strong>License:</strong> <a href="http://www.mozilla.org/MPL/2.0/" target="_blank">Mozilla Public License 2.0</a></p>
+						<p><strong>Version:</strong> <span id="version">?</span></p>
+						<p><strong>License:</strong> <a href="https://www.mozilla.org/MPL/2.0/" target="_blank">Mozilla Public License 2.0</a></p>
 						<p><strong>Author:</strong> James Anderson</p>
 						<p><strong>Contributors:</strong> Dario Kolac (graphics) &amp; Robert Gützkow (graphics)</p>
 						<p><strong>Documentation:</strong>
@@ -612,6 +640,8 @@
 						<a href="https://www.proginosko.com/leechblock/version-history/" target="_blank">https://www.proginosko.com/leechblock/version-history/</a></p>
 						<p><strong>Donations:</strong>
 						<a href="https://www.paypal.me/JamesNAnderson" target="_blank">https://www.paypal.me/JamesNAnderson</a></p>
+						<p><strong>Edited by Randaw366 to use <a href="https://www.activitywatch.net">ActivityWatch</a> for monitoring</strong></p>
+						<p><strong>ActivityWatch is made by Erik Bjäreholt, Johan Bjäreholt, and other contributors</strong></p>
 						<p><button id="openDiagnostics" type="button">Open Diagnostics Page</button></p>
 					</div>
 				</div>
