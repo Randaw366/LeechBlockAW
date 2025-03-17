@@ -19,3 +19,4 @@ I am going to continue working on the plugin, and have the following plans:
 - Allow you to choose certain time requirements for each app
 - Possibly build an extension or modification to ActivityWatch itself to keep settings and whatnot on that side
 - Port to Chrome
+- Allow to block after certain amount of time rather than unblock after certain time spent
